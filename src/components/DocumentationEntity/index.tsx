@@ -104,15 +104,17 @@ export const EventCatalogDocumentationEntityPage = ({
     );
   }
 
+  const baseUrlObj = new URL(pluginConfig.URL);
+
   let url = new URL(
-    `/${page}/${collection}/${eventCatalogResource.id}/${eventCatalogResource.version}?embed=true`,
+    `${baseUrlObj.pathname}/${page}/${collection}/${eventCatalogResource.id}/${eventCatalogResource.version}?embed=true`,
     pluginConfig.URL,
   ).toString();
 
   if(page === 'discover') {
     const filter = eventCatalogResource.discoverFilter || eventCatalogResource.id;
     url = new URL(
-      `/${page}/${collection}?embed=true&id=${filter}`,
+      `${baseUrlObj.pathname}/${page}/${collection}?embed=true&id=${filter}`,
       pluginConfig.URL,
     ).toString();
   }
