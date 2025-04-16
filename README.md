@@ -49,39 +49,64 @@ This plugin exposes React components that you can embed on your pages to display
 yarn add @eventcatalog/backstage-plugin-eventcatalog
 ```
 
-### 2. Setting up the app-config.yml
+### 2. Add the EventCatalog URL to the app-config.yaml
+
+The EventCatalog plugin needs to know the URL of your EventCatalog instance. This can be set in the `app-config.yaml` file.
+
+```yaml
+eventcatalog:
+  URL: "https://demo.eventcatalog.dev"
+```
+
+### 3. Mapping Backstage resources to EventCatalog resources with annotations
 
 Backstage and EventCatalog have different ways to create resources. For example backstage supports components, APIS, domains, systems etc, and EventCatalog supports resources (domains, services and messages (queries, commands and events)).
 
 When you configure the plugin you need to map Backstage information to EventCatalog information, so the plugin knows which EventCatalog page to render.
 
-You need to add plugin configuration to your `app-config.yaml` file.
+We do this by adding annotations to the Backstage resources.
+
+<!-- Make table -->
+
+| Annotation | Required | Default | Description |
+|------------|----------|---------|-------------|
+| `eventcatalog.dev/id` | Yes | - | The id of the resource in EventCatalog |
+| `eventcatalog.dev/version` | No | `latest` | The version of the resource in EventCatalog |
+| `eventcatalog.dev/collection` | No | Uses the entity kind | The collection of the resource in EventCatalog. Options include `services`, `domains`, `queries`, `commands`, `events` |
+
+Example of creating a new service in Backstage and mapping it to an EventCatalog resource:
 
 ```yaml
-# eventcatalog namespace
-eventcatalog:
-  # URL of your catalog (has to be public, if private please raise and issue and we can fix his)
-  URL: "https://demo.eventcatalog.dev"
-  # map your services (Components type="Service") to EventCatalog services
-  services:
-    # The name of the service in backstage
-    - backstage-name: "backend-service"
-      # The id of the service in EventCatalog
-      eventcatalog-id: "InventoryService"
-      # (optional) the filter value for your discovery table embed
-      eventcatalog-page-discovery-default-filter: "Inventory Service"
-    - backstage-name: "backend-service2"
-      eventcatalog-id: "Orders"
-      eventcatalog-version: "1.0.0"
-  # map your APIS (kind: API) to EventCatalog
-  apis:
-    - backstage-name: "example-grpc-api"
-      eventcatalog-id: "NotificationService"
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backend-service
+  description: Backend API service
+  annotations:
+    github.com/project-slug: organization/backend-repo
+    # Here we map the Backstage service to an EventCatalog resource
+    # The id of the resource in EventCatalog
+    eventcatalog.dev/id: InventoryService
+    # The version of the resource in EventCatalog
+    eventcatalog.dev/version: 0.0.2
+    # The collection of the resource in EventCatalog
+    eventcatalog.dev/collection: services
+  tags:
+    - nodejs
+    - express
+    - api
+spec:
+  type: service
+  lifecycle: production
+  owner: team-name
+  system: example-system
+  providesApis:
+    - backend-api
+  dependsOn:
+    - resource:default/database
 ```
 
-The EventCatalog plugin will read these values and map your pages to the correct EventCatalog pages.
-
-### 3. Using the components
+### 4. Using the components
 
 _Assumes a new Backstage installation, install guides my vary_.
 
