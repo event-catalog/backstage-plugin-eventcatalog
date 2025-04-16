@@ -1,5 +1,11 @@
 # @eventcatalog/backstage-plugin-eventcatalog
 
+## 1.0.0
+
+### Major Changes
+
+- af701fa: feat(plugin): using annotations for mappings
+
 ## 0.0.6
 
 ### Patch Changes
