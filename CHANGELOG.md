@@ -1,5 +1,11 @@
 # @eventcatalog/backstage-plugin-eventcatalog
 
+## 1.0.3
+
+### Patch Changes
+
+- 81bf123: feat(plugin): embeded pages now accepts props
+
 ## 1.0.2
 
 ### Patch Changes
