@@ -1,1 +1,1 @@
-export { EventCatalogDocumentationEntityPage, EventCatalogEntityVisualiserCard, EventCatalogEntityMessageCard } from "./components/DocumentationEntity";
+export { EventCatalogDocumentationEntityPage, EventCatalogEntityVisualiserCard, EventCatalogEntityMessageCard, EventCatalogEntityEntityMapCard } from "./components/DocumentationEntity";

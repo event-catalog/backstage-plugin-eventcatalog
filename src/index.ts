@@ -1,1 +1,1 @@
-export { EventCatalogDocumentationEntityPage, EventCatalogEntityVisualiserCard, EventCatalogEntityMessageCard } from './plugin';
+export { EventCatalogDocumentationEntityPage, EventCatalogEntityVisualiserCard, EventCatalogEntityMessageCard, EventCatalogEntityEntityMapCard } from './plugin';
