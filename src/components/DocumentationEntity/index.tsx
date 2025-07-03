@@ -85,7 +85,7 @@ export const EventCatalogDocumentationEntityPage = (props: Props) => {
 
   if(page === 'entity-map') {
     url = new URL(
-      `/${page}/${collection}/${overrideId || eventCatalogResourceId}/${overrideVersion || eventCatalogResourceVersion}/entity-map?embed=true`,
+      `/visualiser/${collection}/${overrideId || eventCatalogResourceId}/${overrideVersion || eventCatalogResourceVersion}/entity-map?embed=true`,
       pluginConfig.URL,
     );
   }
