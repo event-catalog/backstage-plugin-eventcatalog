@@ -36,6 +36,7 @@ This plugin exposes React components that you can embed on your pages to display
 
 - `<EventCatalogDocumentationEntityPage page="docs/page/visualiser"  />`
   - Used to embed whole pages of EventCatalog into your Backstage instance. You can add these as tabs to your pages, clicking on the tab will show the desired feature.
+  - You can also pass custom props to the component to override the id, collection and version (e.g `<EventCatalogDocumentationEntityPage page="docs/page/visualiser" id="my-id" collection="services" version="0.0.1" />`)
 - `<EventCatalogEntityVisualiserCard />`
   - Used to embed a widget (Card) on your existing pages. This component will display the visualiser on your page.
 - `<EventCatalogEntityMessageCard />`
@@ -134,6 +135,19 @@ The `EventCatalogDocumentationEntityPage` components, is a full page component t
 <EntityLayout.Route path="/eventcatlaog-visualizer" title="Visualzer">
   <EventCatalogDocumentationEntityPage page='visualiser' />
 </EntityLayout.Route>
+
+// Will create a new tab called "Entity Map" and route called /eventcatalog-entity-map.
+// This will embed the EventCatalog entity map to your Backstage entity
+<EntityLayout.Route path="/eventcatlaog-entity-map" title="Entity Map">
+  <EventCatalogDocumentationEntityPage page='entity-map' />
+</EntityLayout.Route>
+
+// Override the id, collection and version of the resource in EventCatalog
+// you can choose to override what is rendered, (not read from your backstage configuration)
+<EntityLayout.Route path="/eventcatlaog-entity-map" title="Entity Map">
+  <EventCatalogDocumentationEntityPage page='entity-map' id="MyDomainId" collection="domains" version="0.0.1" />
+</EntityLayout.Route>
+
 ```
 
 #### Card components
