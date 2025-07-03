@@ -7,6 +7,7 @@ interface Props {
   page: 'docs' | 'visualiser' | 'discover' | 'entity-map';
   id?: string;
   version?: string;
+  collection?: string;
 }
 
 const isEntityService = (entity: Entity) => {
@@ -41,15 +42,15 @@ export function getConfig(config: ConfigApi) {
 }
 
 export const EventCatalogDocumentationEntityPage = (props: Props) => {
-  const { page = 'docs', id: overrideId, version: overrideVersion } = props;
+  const { page = 'docs', id: overrideId, version: overrideVersion, collection: overrideCollection } = props;
   const resource = useEntity();
 
   const config = useApi(configApiRef);
   const pluginConfig = getConfig(config);
 
-  const eventCatalogResourceId = resource.entity.metadata.annotations?.['eventcatalog.dev/id'] || null;
-  const eventCatalogResourceVersion = resource.entity.metadata.annotations?.['eventcatalog.dev/version'] || null;
-  const eventCatalogResourceCollection = resource.entity.metadata.annotations?.['eventcatalog.dev/collection'] || null;
+  const eventCatalogResourceId = overrideId || resource.entity.metadata.annotations?.['eventcatalog.dev/id'] || null;
+  const eventCatalogResourceVersion = overrideVersion || resource.entity.metadata.annotations?.['eventcatalog.dev/version'] || null;
+  const eventCatalogResourceCollection = overrideCollection || resource.entity.metadata.annotations?.['eventcatalog.dev/collection'] || null;
 
   const collection = eventCatalogResourceCollection || getEventCatalogCollectionFromEntity(resource.entity);
 
@@ -85,7 +86,7 @@ export const EventCatalogDocumentationEntityPage = (props: Props) => {
 
   if(page === 'entity-map') {
     url = new URL(
-      `/visualiser/${collection}/${overrideId || eventCatalogResourceId}/${overrideVersion || eventCatalogResourceVersion}/entity-map?embed=true`,
+      `/visualiser/${collection}/${eventCatalogResourceId}/${eventCatalogResourceVersion}/entity-map?embed=true`,
       pluginConfig.URL,
     );
   }
