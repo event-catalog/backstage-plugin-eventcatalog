@@ -1,5 +1,11 @@
 # @eventcatalog/backstage-plugin-eventcatalog
 
+## 1.0.2
+
+### Patch Changes
+
+- 5c0b0aa: feat(plugin): added entity map component
+
 ## 1.0.1
 
 ### Patch Changes
