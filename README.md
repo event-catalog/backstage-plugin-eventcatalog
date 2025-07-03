@@ -40,6 +40,8 @@ This plugin exposes React components that you can embed on your pages to display
   - Used to embed a widget (Card) on your existing pages. This component will display the visualiser on your page.
 - `<EventCatalogEntityMessageCard />`
   - Used to embed a widget (Card) on your existing pages. This component will display the explore (table) on your page. Great for displaying a list of messages your service produces/consumes.
+- `<EventCatalogEntityEntityMapCard />`
+  - Used to embed a widget (Card) on your existing pages. This component will display the entity map on your page. Great for displaying a list of entities for a given domain.
 
 ## Getting started
 
@@ -144,6 +146,7 @@ These components can be added to your pages as Cards, that can live inside the B
 import {
   EventCatalogEntityVisualiserCard,
   EventCatalogEntityMessageCard,
+  EventCatalogEntityEntityMapCard,
 } from "@eventcatalog/backstage-plugin-eventcatalog";
 
 <Grid container spacing={3} alignItems="stretch">
@@ -158,6 +161,10 @@ import {
   <Grid item md={6} xs={12}>
     <!-- Adds the explore (messages) to a grid item in Backstage -->
     <EventCatalogEntityMessageCard />
+  </Grid>
+  <Grid item md={6} xs={12}>
+    <!-- Adds the entity map to a grid item in Backstage -->
+    <EventCatalogEntityEntityMapCard />
   </Grid>
 </Grid>;
 ```

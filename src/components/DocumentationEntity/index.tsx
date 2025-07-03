@@ -4,7 +4,9 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { Entity } from '@backstage/catalog-model';
 
 interface Props {
-  page: 'docs' | 'visualiser' | 'discover';
+  page: 'docs' | 'visualiser' | 'discover' | 'entity-map';
+  id?: string;
+  version?: string;
 }
 
 const isEntityService = (entity: Entity) => {
@@ -39,7 +41,7 @@ export function getConfig(config: ConfigApi) {
 }
 
 export const EventCatalogDocumentationEntityPage = (props: Props) => {
-  const { page = 'docs' } = props;
+  const { page = 'docs', id: overrideId, version: overrideVersion } = props;
   const resource = useEntity();
 
   const config = useApi(configApiRef);
@@ -81,6 +83,13 @@ export const EventCatalogDocumentationEntityPage = (props: Props) => {
     );
   }
 
+  if(page === 'entity-map') {
+    url = new URL(
+      `/${page}/${collection}/${overrideId || eventCatalogResourceId}/${overrideVersion || eventCatalogResourceVersion}/entity-map?embed=true`,
+      pluginConfig.URL,
+    );
+  }
+
   return (
     <div style={{ background: 'white', height: '100%' }}>
       <iframe title={url.toString()} src={url.toString()} width="100%" height="100%" />
@@ -91,6 +100,11 @@ export const EventCatalogDocumentationEntityPage = (props: Props) => {
 export const EventCatalogEntityVisualiserCard = () => {
   return (<div style={{ height: '100%'}}>
     <EventCatalogDocumentationEntityPage page="visualiser" />
+  </div>);
+};
+export const EventCatalogEntityEntityMapCard = (props: any) => {
+  return (<div style={{ height: '100%'}}>
+    <EventCatalogDocumentationEntityPage page="entity-map" {...props} />
   </div>);
 };
 export const EventCatalogEntityMessageCard = () => {
