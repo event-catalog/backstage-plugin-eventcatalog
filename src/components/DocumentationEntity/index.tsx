@@ -4,7 +4,7 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { Entity } from '@backstage/catalog-model';
 
 interface Props {
-  page: 'docs' | 'visualiser' | 'discover' | 'entity-map';
+  page: 'docs' | 'visualiser' | 'discover' | 'entity-map' | 'schema-explorer';
   id?: string;
   version?: string;
   collection?: string;
@@ -91,6 +91,13 @@ export const EventCatalogDocumentationEntityPage = (props: Props) => {
     );
   }
 
+  if(page === 'schema-explorer') {
+    url = new URL(
+      `/schemas?embed=true`,
+      pluginConfig.URL,
+    );
+  }
+
   return (
     <div style={{ background: 'white', height: '100%' }}>
       <iframe title={url.toString()} src={url.toString()} width="100%" height="100%" />
@@ -106,6 +113,11 @@ export const EventCatalogEntityVisualiserCard = () => {
 export const EventCatalogEntityEntityMapCard = (props: any) => {
   return (<div style={{ height: '100%'}}>
     <EventCatalogDocumentationEntityPage page="entity-map" {...props} />
+  </div>);
+};
+export const EventCatalogEntitySchemaExplorerCard = () => {
+  return (<div style={{ height: '100%'}}>
+    <EventCatalogDocumentationEntityPage page="schema-explorer" />
   </div>);
 };
 export const EventCatalogEntityMessageCard = () => {

@@ -21,6 +21,7 @@
 
 - 📃 Bring [EventCatalog documentation](https://demo.eventcatalog.dev/docs/domains/Orders/0.0.3) into Backstage
 - 📊 Embed [EventCatalog visualizer](https://demo.eventcatalog.dev/visualiser/domains/Orders/0.0.3) into your Backstage pages
+- 📚 Embed [EventCatalog schema explorer](https://demo.eventcatalog.dev/schemas) into your Backstage pages
 - 🔎 Embed the [EventCatalog discovery table](https://demo.eventcatalog.dev/discover/events) to quickly find messages for your services
 - ⭐ And much more...
 
@@ -43,7 +44,9 @@ This plugin exposes React components that you can embed on your pages to display
   - Used to embed a widget (Card) on your existing pages. This component will display the explore (table) on your page. Great for displaying a list of messages your service produces/consumes.
 - `<EventCatalogEntityEntityMapCard />`
   - Used to embed a widget (Card) on your existing pages. This component will display the entity map on your page. Great for displaying a list of entities for a given domain.
-
+- `<EventCatalogEntitySchemaExplorerCard />`
+  - Used to embed a widget (Card) on your existing pages. This component will display the schema explorer on your page. 
+  
 ## Getting started
 
 ### 1. Install the plugin
@@ -142,6 +145,12 @@ The `EventCatalogDocumentationEntityPage` components, is a full page component t
   <EventCatalogDocumentationEntityPage page='entity-map' />
 </EntityLayout.Route>
 
+// Will create a new tab called "Schema Explorer" and route called /eventcatalog-schema-explorer.
+// This will embed the EventCatalog schema explorer to your Backstage entity
+<EntityLayout.Route path="/eventcatlaog-schema-explorer" title="Schema Explorer">
+  <EventCatalogDocumentationEntityPage page='schema-explorer' />
+</EntityLayout.Route>
+
 // Override the id, collection and version of the resource in EventCatalog
 // you can choose to override what is rendered, (not read from your backstage configuration)
 <EntityLayout.Route path="/eventcatlaog-entity-map" title="Entity Map">
@@ -180,6 +189,10 @@ import {
     <!-- Adds the entity map to a grid item in Backstage -->
     <EventCatalogEntityEntityMapCard />
   </Grid>
+  <Grid item md={6} xs={12}>
+    <!-- Adds the schema explorer to a grid item in Backstage -->
+    <EventCatalogEntitySchemaExplorerCard />
+  </Grid>
 </Grid>;
 ```
 
@@ -188,30 +201,6 @@ import {
 ## Found a problem?
 
 Raise a GitHub issue on this project, or contact us on [our Discord server](https://discord.gg/3rjaZMmrAm).
-
-# Sponsors
-
-Thank you to our project sponsors.
-
-## Gold sponsors
-
-<div align="center">
-  <img alt="hookdeck" src="./images/sponsors/hookdeck.svg" />
-  <p style="margin: 0; padding: 0;">Serverless infrastructure for event-driven architecture. </p>
-  <a href="https://hookdeck.com/?ref=eventcatalog-sponsor" target="_blank" >Learn more</a>
-</div>
-
-<hr />
-
-<div align="center">
-  <img alt="gravitee" src="./images/sponsors/gravitee-logo-black.svg" width="50%" />
-  <p style="margin: 0; padding: 0;">Manage, secure, and govern every API in your organization</p>
-  <a href="https://gravitee.io?utm_source=eventcatalog&utm_medium=web&utm_campaign=sponsorship" target="_blank" >Learn more</a>
-</div>
-
-<hr />
-
-_Sponsors help make EventCatalog sustainable, want to help the project? Get in touch! Or [visit our sponsor page](https://www.eventcatalog.dev/support)._
 
 # Enterprise support
 
