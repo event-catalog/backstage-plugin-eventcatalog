@@ -1,5 +1,11 @@
 # @eventcatalog/backstage-plugin-eventcatalog
 
+## 1.1.0
+
+### Minor Changes
+
+- 9660013: feat(plugin): added schmea explorer to backstage as cards and pages
+
 ## 1.0.3
 
 ### Patch Changes
