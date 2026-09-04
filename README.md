@@ -1,235 +1,258 @@
 <div align="center">
 
 <h1>⚡️ EventCatalog plugin for Backstage</h1>
-<p>Embed your EventCatalog directly into Backstage. Document and visualize your event-driven architecture in Backstage.</p>
+<p>Embed EventCatalog documentation and architecture visualizations in Backstage.</p>
 
 [![PRs Welcome][prs-badge]][prs]
-<img src="https://img.shields.io/github/actions/workflow/status/event-catalog/backstage-plugin-eventcatalog/verify-build.yml"/>
-[![](https://dcbadge.limes.pink/api/server/https://discord.gg/3rjaZMmrAm?style=flat)](https://discord.gg/3rjaZMmrAm) [<img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" height="20px" />](https://www.linkedin.com/in/david-boyne/) [![blog](https://img.shields.io/badge/license-Dual--License-brightgreen)](https://github.com/event-catalog/generator-openapi/blob/main/LICENSE.md)
+<img src="https://img.shields.io/github/actions/workflow/status/event-catalog/backstage-plugin-eventcatalog/verify-build.yml" alt="Build status" />
+[![Discord](https://dcbadge.limes.pink/api/server/https://discord.gg/3rjaZMmrAm?style=flat)](https://discord.gg/3rjaZMmrAm)
+[![License: Dual License](https://img.shields.io/badge/license-Dual--License-brightgreen)](./LICENSE.md)
 
-<img alt="header" src="./images/backstage.png" />
+<img alt="EventCatalog embedded in Backstage" src="./images/backstage.png" />
 
-<h4>Features: Embed EventCatalog into your Backstage project, including documentation, visualizer and table of messages. </h4>
-
-[Read the Docs](https://www.eventcatalog.dev/docs/development/plugins/backstage/intro) | [View Demo](https://demo.eventcatalog.dev/docs)
+[Documentation](https://www.eventcatalog.dev/docs/plugins/backstage/overview) | [Explore the EventCatalog demo](https://demo.eventcatalog.dev)
 
 </div>
 
-<hr/>
+## Features
 
-# Core Features
+Use EventCatalog as a frontend integration inside Backstage entity pages. The plugin can embed:
 
-- 📃 Bring [EventCatalog documentation](https://demo.eventcatalog.dev/docs/domains/Orders/0.0.3) into Backstage
-- 📊 Embed [EventCatalog visualizer](https://demo.eventcatalog.dev/visualiser/domains/Orders/0.0.3) into your Backstage pages
-- 📚 Embed [EventCatalog schema explorer](https://demo.eventcatalog.dev/schemas) into your Backstage pages
-- 🔎 Embed the [EventCatalog discovery table](https://demo.eventcatalog.dev/discover/events) to quickly find messages for your services
-- ⭐ And much more...
+- resource documentation and visualizers
+- discovery tables for services and messages
+- entity maps and the schema explorer
+- the catalog-wide Architecture Graph, optionally focused on an entity with a relationship depth
+- the System Context Map overview or the context map for a specific system
+- flow visualizers
 
-# How it works
+Every page and card component supports `theme="light"` and `theme="dark"`. The embedded view uses the visitor's saved EventCatalog theme when this prop is omitted.
 
-Many folks are using [Backstage](https://backstage.spotify.com/) for their internal developer portals. Backstage is a highly configurable platform that allows you to document your architecture in components, apis, services, domains and much more.
+## Get started
 
-Backstage supports plugins, that have a frontend and backend support.
+You will need a Backstage app, an EventCatalog instance that the user's browser can reach, and an EventCatalog Scale license for commercial use.
 
-This EventCatalog plugin let's you embed your EventCatalog information inside your backstage instance.
+### 1. Enable the integration in EventCatalog
 
-This plugin exposes React components that you can embed on your pages to display information from EventCatalog
+Add your Scale license key to the `.env` file in the EventCatalog project:
 
-- `<EventCatalogDocumentationEntityPage page="docs/page/visualiser"  />`
-  - Used to embed whole pages of EventCatalog into your Backstage instance. You can add these as tabs to your pages, clicking on the tab will show the desired feature.
-  - You can also pass custom props to the component to override the id, collection and version (e.g `<EventCatalogDocumentationEntityPage page="docs/page/visualiser" id="my-id" collection="services" version="0.0.1" />`)
-- `<EventCatalogEntityVisualiserCard />`
-  - Used to embed a widget (Card) on your existing pages. This component will display the visualiser on your page.
-- `<EventCatalogEntityMessageCard />`
-  - Used to embed a widget (Card) on your existing pages. This component will display the explore (table) on your page. Great for displaying a list of messages your service produces/consumes.
-- `<EventCatalogEntityEntityMapCard />`
-  - Used to embed a widget (Card) on your existing pages. This component will display the entity map on your page. Great for displaying a list of entities for a given domain.
-- `<EventCatalogEntitySchemaExplorerCard />`
-  - Used to embed a widget (Card) on your existing pages. This component will display the schema explorer on your page. 
-  
-## Getting started
+```bash
+EVENTCATALOG_SCALE_LICENSE_KEY=your-scale-license-key
+```
 
-### 1. Install the plugin
+Build and deploy EventCatalog with this environment variable. Existing Backstage-specific keys can continue to use `EVENTCATALOG_LICENSE_KEY_BACKSTAGE`, but new deployments should use `EVENTCATALOG_SCALE_LICENSE_KEY`.
+
+See [Getting a license key for integrations](https://www.eventcatalog.dev/docs/development/license-keys/integrations).
+
+### 2. Install the plugin
+
+From the root of your Backstage app:
 
 ```bash
 yarn add @eventcatalog/backstage-plugin-eventcatalog
 ```
 
-### 2. Add the EventCatalog URL to the app-config.yaml
+### 3. Configure the EventCatalog URL
 
-The EventCatalog plugin needs to know the URL of your EventCatalog instance. This can be set in the `app-config.yaml` file.
+Add the public base URL of your EventCatalog instance to `app-config.yaml`:
 
 ```yaml
 eventcatalog:
-  URL: "https://demo.eventcatalog.dev"
+  URL: https://demo.eventcatalog.dev
 ```
 
-### 3. Mapping Backstage resources to EventCatalog resources with annotations
+Use the base URL only. Do not add a view path such as `/docs` or `/visualiser`; the plugin builds the embed URL for each component.
 
-Backstage and EventCatalog have different ways to create resources. For example backstage supports components, APIS, domains, systems etc, and EventCatalog supports resources (domains, services and messages (queries, commands and events)).
+### 4. Map a Backstage entity
 
-When you configure the plugin you need to map Backstage information to EventCatalog information, so the plugin knows which EventCatalog page to render.
-
-We do this by adding annotations to the Backstage resources.
-
-<!-- Make table -->
-
-| Annotation | Required | Default | Description |
-|------------|----------|---------|-------------|
-| `eventcatalog.dev/id` | Yes | - | The id of the resource in EventCatalog |
-| `eventcatalog.dev/version` | No | `latest` | The version of the resource in EventCatalog |
-| `eventcatalog.dev/collection` | No | Uses the entity kind | The collection of the resource in EventCatalog. Options include `services`, `domains`, `queries`, `commands`, `events` |
-
-Example of creating a new service in Backstage and mapping it to an EventCatalog resource:
+Add EventCatalog annotations to the Backstage catalog entity:
 
 ```yaml
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: backend-service
-  description: Backend API service
+  name: order-service
+  description: Handles customer orders
   annotations:
-    github.com/project-slug: organization/backend-repo
-    # Here we map the Backstage service to an EventCatalog resource
-    # The id of the resource in EventCatalog
-    eventcatalog.dev/id: InventoryService
-    # The version of the resource in EventCatalog
-    eventcatalog.dev/version: 0.0.2
-    # The collection of the resource in EventCatalog
+    eventcatalog.dev/id: order-service
+    eventcatalog.dev/version: 1.0.0
     eventcatalog.dev/collection: services
-  tags:
-    - nodejs
-    - express
-    - api
 spec:
   type: service
   lifecycle: production
-  owner: team-name
-  system: example-system
-  providesApis:
-    - backend-api
-  dependsOn:
-    - resource:default/database
+  owner: team-orders
 ```
 
-### 4. Using the components
+| Annotation | Required | Description |
+| --- | --- | --- |
+| `eventcatalog.dev/id` | Usually | EventCatalog resource ID. The catalog-wide System Context Map overview does not require one. |
+| `eventcatalog.dev/version` | Depends on the view | EventCatalog resource version. Entity maps, flows, and system-specific context maps require a version. |
+| `eventcatalog.dev/collection` | Sometimes | EventCatalog collection, such as `services`, `domains`, `events`, `commands`, or `queries`. |
 
-_Assumes a new Backstage installation, install guides my vary_.
+The plugin infers `services` for Backstage service components and APIs, and `domains` for Backstage domains. Other entity kinds should provide `eventcatalog.dev/collection` or an explicit `collection`/`type` prop.
 
-#### Tabbed pages
+Annotations are used by default. Components that expose selection props can override them with `id`, `version`, `collection`, `type`, `system`, or `flow`.
 
-```js
-import { EventCatalogDocumentationEntityPage } from "@eventcatalog/backstage-plugin-eventcatalog";
+### 5. Add an entity tab
+
+Import the general-purpose page component and add it to an `EntityLayout`:
+
+```tsx
+import { EventCatalogDocumentationEntityPage } from '@eventcatalog/backstage-plugin-eventcatalog';
+
+<EntityLayout.Route path="/eventcatalog-docs" title="EventCatalog: Docs">
+  <EventCatalogDocumentationEntityPage page="docs" />
+</EntityLayout.Route>
 ```
 
-The `EventCatalogDocumentationEntityPage` components, is a full page component that you can assign to any `EntityLayout.Route`. Example:
+Open a mapped entity and select **EventCatalog: Docs**. If a mapping message appears, check the annotations and make sure Backstage has re-ingested the entity.
 
-![EventCatalog Pages](./images/eventcatalog-pages.png)
+## Add entity tabs
 
-```js
-// Will create a new tab called "Docs" and route called /eventcatalog. This will embed the docs for that
-// entity in your page. Using the info from the app-config to map your Backstage ID to EventCatalog ID
-<EntityLayout.Route path="/eventcatlaog" title="Docs">
-  <EventCatalogDocumentationEntityPage page='docs' />
+The general-purpose component supports these `page` values:
+
+| Value | Embedded view | Selection requirements |
+| --- | --- | --- |
+| `docs` | Resource documentation | Mapped resource or explicit overrides |
+| `visualiser` | Resource visualizer | Mapped resource or explicit overrides |
+| `discover` | Discovery table for the mapped collection | Mapped resource |
+| `entity-map` | Resource entity map | ID, collection, and version |
+| `schema-explorer` | Catalog schema explorer | Global view rendered from a mapped entity page |
+| `architecture-graph` | Architecture Graph | Prefer the dedicated component below |
+| `system-context-map` | System Context Map | Prefer the dedicated component below |
+| `flow` | Flow visualizer | Prefer the dedicated component below |
+
+For example:
+
+```tsx
+<EntityLayout.Route path="/eventcatalog-visualizer" title="EventCatalog: Visualizer">
+  <EventCatalogDocumentationEntityPage page="visualiser" />
 </EntityLayout.Route>
 
-// Will create a new tab called "Visualzer" and route called /eventcatalog-visualizer.
-// This will embed the EventCatalog visualiser to your Backstage entity
-<EntityLayout.Route path="/eventcatlaog-visualizer" title="Visualzer">
-  <EventCatalogDocumentationEntityPage page='visualiser' />
+<EntityLayout.Route path="/eventcatalog-messages" title="EventCatalog: Messages">
+  <EventCatalogDocumentationEntityPage page="discover" />
 </EntityLayout.Route>
 
-// Will create a new tab called "Entity Map" and route called /eventcatalog-entity-map.
-// This will embed the EventCatalog entity map to your Backstage entity
-<EntityLayout.Route path="/eventcatlaog-entity-map" title="Entity Map">
-  <EventCatalogDocumentationEntityPage page='entity-map' />
+<EntityLayout.Route path="/eventcatalog-entity-map" title="EventCatalog: Entity Map">
+  <EventCatalogDocumentationEntityPage page="entity-map" />
 </EntityLayout.Route>
 
-// Will create a new tab called "Schema Explorer" and route called /eventcatalog-schema-explorer.
-// This will embed the EventCatalog schema explorer to your Backstage entity
-<EntityLayout.Route path="/eventcatlaog-schema-explorer" title="Schema Explorer">
-  <EventCatalogDocumentationEntityPage page='schema-explorer' />
+<EntityLayout.Route path="/eventcatalog-schema-explorer" title="EventCatalog: Schema Explorer">
+  <EventCatalogDocumentationEntityPage page="schema-explorer" />
 </EntityLayout.Route>
-
-// Override the id, collection and version of the resource in EventCatalog
-// you can choose to override what is rendered, (not read from your backstage configuration)
-<EntityLayout.Route path="/eventcatlaog-entity-map" title="Entity Map">
-  <EventCatalogDocumentationEntityPage page='entity-map' id="MyDomainId" collection="domains" version="0.0.1" />
-</EntityLayout.Route>
-
 ```
 
-#### Card components
+Use the dedicated components for the Architecture Graph, System Context Map, and flows:
 
-These components can be added to your pages as Cards, that can live inside the Backstage Grid System.
-
-![EventCatalog Card Components](./images/eventcatalog-card-components.png)
-
-```js
+```tsx
 import {
-  EventCatalogEntityVisualiserCard,
-  EventCatalogEntityMessageCard,
-  EventCatalogEntityEntityMapCard,
-} from "@eventcatalog/backstage-plugin-eventcatalog";
+  EventCatalogArchitectureGraphEntityPage,
+  EventCatalogFlowEntityPage,
+  EventCatalogSystemContextMapEntityPage,
+} from '@eventcatalog/backstage-plugin-eventcatalog';
+
+<EntityLayout.Route path="/eventcatalog-architecture" title="EventCatalog: Architecture">
+  <EventCatalogArchitectureGraphEntityPage type="service" depth={2} />
+</EntityLayout.Route>
+
+{/* Omit system and version to show the catalog-wide overview. */}
+<EntityLayout.Route path="/eventcatalog-system-context" title="EventCatalog: System Context">
+  <EventCatalogSystemContextMapEntityPage />
+</EntityLayout.Route>
+
+<EntityLayout.Route path="/eventcatalog-order-system" title="EventCatalog: Order System">
+  <EventCatalogSystemContextMapEntityPage
+    system="order-management-system"
+    version="1.0.0"
+  />
+</EntityLayout.Route>
+
+<EntityLayout.Route path="/eventcatalog-checkout-flow" title="EventCatalog: Checkout Flow">
+  <EventCatalogFlowEntityPage flow="checkout-saga" version="1.0.0" />
+</EntityLayout.Route>
+```
+
+Architecture Graph depth can be `1`, `2`, or `3` and defaults to `2`. The graph uses the latest version of each resource, so the `version` prop does not change its graph data.
+
+## Add overview cards
+
+Card components render the same EventCatalog views inside a Backstage grid:
+
+| Component | View |
+| --- | --- |
+| `EventCatalogEntityVisualiserCard` | Resource visualizer |
+| `EventCatalogEntityMessageCard` | Discovery table |
+| `EventCatalogEntityEntityMapCard` | Entity map |
+| `EventCatalogEntitySchemaExplorerCard` | Schema explorer |
+| `EventCatalogEntityArchitectureGraphCard` | Architecture Graph |
+| `EventCatalogEntitySystemContextMapCard` | System Context Map |
+| `EventCatalogEntityFlowCard` | Flow visualizer |
+
+The cards use `height: 100%`, so give each parent grid item a concrete height:
+
+```tsx
+import {
+  EventCatalogEntityArchitectureGraphCard,
+  EventCatalogEntityFlowCard,
+  EventCatalogEntitySchemaExplorerCard,
+} from '@eventcatalog/backstage-plugin-eventcatalog';
 
 <Grid container spacing={3} alignItems="stretch">
-  <Grid item md={6}>
-    <!-- Backstage card -->
-    <EntityAboutCard variant="gridItem" />
+  <Grid item xs={12} style={{ height: 'calc(100vh - 240px)', minHeight: 600 }}>
+    <EventCatalogEntityArchitectureGraphCard
+      type="service"
+      depth={2}
+      theme="dark"
+    />
   </Grid>
-  <Grid item md={6}>
-    <!-- Adds the visualizer to a grid item in Backstage -->
-    <EventCatalogEntityVisualiserCard />
+
+  <Grid item md={6} xs={12} style={{ height: 700 }}>
+    <EventCatalogEntitySchemaExplorerCard theme="dark" />
   </Grid>
-  <Grid item md={6} xs={12}>
-    <!-- Adds the explore (messages) to a grid item in Backstage -->
-    <EventCatalogEntityMessageCard />
+
+  <Grid item md={6} xs={12} style={{ height: 700 }}>
+    <EventCatalogEntityFlowCard
+      flow="checkout-saga"
+      version="1.0.0"
+      theme="dark"
+    />
   </Grid>
-  <Grid item md={6} xs={12}>
-    <!-- Adds the entity map to a grid item in Backstage -->
-    <EventCatalogEntityEntityMapCard />
-  </Grid>
-  <Grid item md={6} xs={12}>
-    <!-- Adds the schema explorer to a grid item in Backstage -->
-    <EventCatalogEntitySchemaExplorerCard />
-  </Grid>
-</Grid>;
+</Grid>
 ```
 
----
+Avoid percentage heights unless every ancestor has a defined height. Full-page components fill the height supplied by `EntityLayout.Route`; give any custom route wrapper an explicit height if it collapses.
 
-## Found a problem?
+## Component props
 
-Raise a GitHub issue on this project, or contact us on [our Discord server](https://discord.gg/3rjaZMmrAm).
+The general-purpose and dedicated components expose these selection and display props where applicable:
 
-# Enterprise support
+| Prop | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Override the EventCatalog resource ID. It also aliases `system` and `flow` on their dedicated components. |
+| `version` | `string` | Override the EventCatalog resource version. |
+| `collection` | `string` | Override the EventCatalog collection. |
+| `type` | `string` | Alias for `collection`; known singular types are converted to plural collections. |
+| `theme` | `'light' \| 'dark'` | Force the theme for this embed. |
+| `depth` | `1 \| 2 \| 3` | Set the Architecture Graph relationship depth. |
+| `system` | `string` | Select a system for a system-specific context map. |
+| `flow` | `string` | Select a flow. A version is also required. |
 
-Interested in collaborating with us? Our offerings include dedicated support, priority assistance, feature development, custom integrations, and more.
+For the complete API and task-oriented examples, read the [Backstage plugin documentation](https://www.eventcatalog.dev/docs/plugins/backstage/overview).
 
-Find more details on our [services page](https://eventcatalog.dev/services).
+## Contributing and support
 
-# Contributing
+Read the [contributing guidelines](https://www.eventcatalog.dev/docs/contributing/overview), [raise a GitHub issue](https://github.com/event-catalog/backstage-plugin-eventcatalog/issues), or contact the community on [Discord](https://discord.gg/3rjaZMmrAm).
 
-If you have any questions, features or issues please raise any issue or pull requests you like. We will try my best to get back to you.
+For enterprise support, priority assistance, feature development, and custom integrations, see [EventCatalog services](https://www.eventcatalog.dev/services).
 
-You can find the [contributing guidelines here](https://eventcatalog.dev/docs/contributing/overview).
+To run the project locally:
 
-## Running the project locally
+1. Clone the repository.
+2. Run `yarn install`.
+3. Run `yarn start`.
 
-1. Clone the repo
-1. Install required dependencies `yarn install`
+## License
 
-[license-badge]: https://img.shields.io/github/license/event-catalog/backstage-plugin-eventcatalog.svg?color=yellow
-[license]: https://github.com/event-catalog/backstage-plugin-eventcatalog/blob/main/LICENSE
+This project uses a [dual-license model](./LICENSE.md): AGPL-3.0 for qualifying open-source use and a [commercial license](./LICENSE-COMMERCIAL.md) for proprietary or internal use. Contact `hello@eventcatalog.dev` with licensing questions.
+
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
-[github-watch-badge]: https://img.shields.io/github/watchers/event-catalog/backstage-plugin-eventcatalog.svg?style=social
-[github-watch]: https://github.com/event-catalog/backstage-plugin-eventcatalog/watchers
-[github-star-badge]: https://img.shields.io/github/stars/event-catalog/backstage-plugin-eventcatalog.svg?style=social
-[github-star]: https://github.com/event-catalog/backstage-plugin-eventcatalog/stargazers
-
-# Commercial Use
-
-This project is governed by a [dual-license](./LICENSE.md). To ensure the sustainability of the project, you can freely make use of this software if your projects are Open Source. Otherwise for internal systems you must obtain a [commercial license](./LICENSE-COMMERCIAL.md).
-
-If you would like to obtain a Commercial License, you can purchase a license at https://dashboard.eventcatalog.dev or email us at `hello@eventcatalog.dev`
