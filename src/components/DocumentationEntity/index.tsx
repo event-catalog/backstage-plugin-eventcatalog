@@ -177,11 +177,22 @@ export const EventCatalogDocumentationEntityPage = (props: EventCatalogDocumenta
     );
   }
 
+  let embedId = eventCatalogResourceId;
+  let embedVersion = eventCatalogResourceVersion;
+
+  if (isSystemContextMap) {
+    embedId = systemId;
+    embedVersion = systemVersion;
+  } else if (isFlow) {
+    embedId = flowId;
+    embedVersion = flowVersion;
+  }
+
   const url = buildEventCatalogEmbedUrl({
     baseUrl: pluginConfig.URL,
     page,
-    id: isSystemContextMap ? systemId : isFlow ? flowId : eventCatalogResourceId,
-    version: isSystemContextMap ? systemVersion : isFlow ? flowVersion : eventCatalogResourceVersion,
+    id: embedId,
+    version: embedVersion,
     collection,
     depth,
     theme,
