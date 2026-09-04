@@ -1,5 +1,11 @@
 # @eventcatalog/backstage-plugin-eventcatalog
 
+## 1.2.0
+
+### Minor Changes
+
+- 8f3879b: Add Architecture Graph, System Context Map, and flow page and card embeds. Add light and dark theme overrides, configurable graph depth, and full-height iframe layouts for embedded EventCatalog views.
+
 ## 1.1.0
 
 ### Minor Changes
